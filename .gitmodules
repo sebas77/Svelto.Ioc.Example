@@ -1,0 +1,3 @@
+[submodule "Assets/Svelto-IoC"]
+	path = Assets/Svelto-IoC
+	url = https://github.com/sebas77/Svelto.IoC.git
