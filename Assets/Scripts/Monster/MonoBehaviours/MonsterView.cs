@@ -3,25 +3,25 @@ using UnityEngine;
 
 public class MonsterView: MonoBehaviour
 {
-    [Inject] public MonsterPresenter    monster      { set; private get; }
+    [Inject] public MonsterPresenter    monsterPresenter      { set; private get; }
     
 	void Start()
 	{
-        DesignByContract.Check.Require(monster != null);
+        DesignByContract.Check.Require(monsterPresenter != null);
 
-        monster.SetView(this);
+        monsterPresenter.SetView(this);
 	}
 	
 	void Update()
 	{
-        monster.Update(Time.deltaTime);
+        monsterPresenter.Update(Time.deltaTime);
 
-		GetComponent<Renderer>().materials[0].color = new Color(1.0f, monster.energy, monster.energy, 1.0f);
+		GetComponent<Renderer>().materials[0].color = new Color(1.0f, monsterPresenter.energy, monsterPresenter.energy, 1.0f);
 	}
 	
 	public void Killed()
 	{
-		GameObject.Destroy(this.gameObject);
+		Destroy(gameObject);
 	}
 }
 

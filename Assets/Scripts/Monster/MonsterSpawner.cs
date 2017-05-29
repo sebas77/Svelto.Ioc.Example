@@ -34,6 +34,7 @@ public class MonsterSpawner: IInitialize
 
                 monster.transform.parent = _monstersRoot.transform;
             }
+
 			_timeLapsed = 0;
 			_frequency = Random.Range(0.5f, 4.0f);
 		}

@@ -4,8 +4,6 @@ using Svelto.IoC;
 
 public class UnderAttackSystem:IInitialize
 {
-    [Inject] public IMonsterCountHolder     monsterCounter      { set; private get; }
-
     public UnderAttackSystem()
 	{
         _freeWeapons = new List<WeaponPresenter>();
@@ -14,8 +12,6 @@ public class UnderAttackSystem:IInitialize
 
     public void OnDependenciesInjected()
 	{
-        DesignByContract.Check.Require(monsterCounter != null);
-
         TaskRunner.Instance.Run(new Svelto.Tasks.LoopActionEnumerator(Tick));
 	}
 
@@ -38,8 +34,6 @@ public class UnderAttackSystem:IInitialize
     public void AddMonster(ITarget monster)
     {
         _monstersDic[monster.target] = monster;
-
-        monsterCounter.AddMonster();
 
         monster.OnKilled += OnMonsterKilled;
     }
@@ -71,8 +65,6 @@ public class UnderAttackSystem:IInitialize
     void OnMonsterKilled(INeedToMoveUntilIDie monster)
     {
         monster.OnKilled -= OnMonsterKilled;
-
-        monsterCounter.RemoveMonster();
 
         _monstersDic.Remove(monster.target);
     }

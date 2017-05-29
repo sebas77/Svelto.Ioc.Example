@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-
 internal class MonsterCountHolder : IMonsterCounter, IMonsterCountHolder
 {
     //IMonsterCounter Interface

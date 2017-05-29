@@ -1,3 +1,4 @@
+using System;
 using Svelto.IoC;
 using UnityEngine;
 
@@ -7,28 +8,29 @@ enum MonsterState
     Hit
 };
 
-public class MonsterPresenter: INeedToMoveUntilIDie, ITarget
+public class MonsterPresenter: INeedToMoveUntilIDie, ITarget, IInitialize
 {
     [Inject] public UnderAttackSystem   attackSystem { set; private get; }
     [Inject] public MonsterPathFollower pathFollower { set; private get; }
+    [Inject] public IMonsterCountHolder monsterCounter      { set; private get; }
 
     public event System.Action<INeedToMoveUntilIDie> OnKilled;
-
+        
     public Transform    target { get { return _view.transform; } }
     public float        energy { get { return _energy; } }
+
+    void IInitialize.OnDependenciesInjected()
+	{
+        monsterCounter.AddMonster();
+	}
 
     public void SetView(MonsterView view)
     {
         _view = view;
 
-        pathFollower.AddMonster(this);
+        pathFollower.SetMonster(this);
         attackSystem.AddMonster(this);
     }
-
-    void CommitSuicide()
-	{
-        Killed();
-	}
 
     public void StartBeingHit()
     {
@@ -46,16 +48,23 @@ public class MonsterPresenter: INeedToMoveUntilIDie, ITarget
 
         if (_energy <= 0)
         {
-            Killed();
+            KilledOrEscapedDoenstMatterDoesIt();
         }
     }
 
-    void Killed()
+    void KilledOrEscapedDoenstMatterDoesIt()
     {
         if (OnKilled != null)
             OnKilled(this);
 
+        monsterCounter.RemoveMonster();
+
         _view.Killed();
+    }
+
+    public void Escaped()
+    {
+        KilledOrEscapedDoenstMatterDoesIt();
     }
 
     const float DAMAGE = 0.25f;
